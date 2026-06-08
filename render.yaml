@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: stabilityflow
+    runtime: node
+    plan: starter
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/dashboard/stats
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: stabilityflow-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: PORT
+        value: 10000
+
+databases:
+  - name: stabilityflow-db
+    plan: basic-256mb
+    databaseName: stabilityflow
+    user: stabilityflow
